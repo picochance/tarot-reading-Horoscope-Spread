@@ -1,92 +1,248 @@
-// タロットカードデータ（78枚）
+// タロットカードデータ（78枚）- 詳細な意味付き
 const tarotDeck = [
     // 大アルカナ（22枚）
-    { name: "愚者", emoji: "🃏", type: "major" },
-    { name: "魔術師", emoji: "🎩", type: "major" },
-    { name: "女教皇", emoji: "👸", type: "major" },
-    { name: "女帝", emoji: "👑", type: "major" },
-    { name: "皇帝", emoji: "🤴", type: "major" },
-    { name: "教皇", emoji: "⛪", type: "major" },
-    { name: "恋人", emoji: "💑", type: "major" },
-    { name: "戦車", emoji: "🏇", type: "major" },
-    { name: "力", emoji: "🦁", type: "major" },
-    { name: "隠者", emoji: "🕯️", type: "major" },
-    { name: "運命の輪", emoji: "☸️", type: "major" },
-    { name: "正義", emoji: "⚖️", type: "major" },
-    { name: "吊された男", emoji: "🙃", type: "major" },
-    { name: "死神", emoji: "💀", type: "major" },
-    { name: "節制", emoji: "⚗️", type: "major" },
-    { name: "悪魔", emoji: "😈", type: "major" },
-    { name: "塔", emoji: "🗼", type: "major" },
-    { name: "星", emoji: "⭐", type: "major" },
-    { name: "月", emoji: "🌙", type: "major" },
-    { name: "太陽", emoji: "☀️", type: "major" },
-    { name: "審判", emoji: "📯", type: "major" },
-    { name: "世界", emoji: "🌍", type: "major" },
+    { name: "愚者", emoji: "🃏", type: "major", 
+      upright: "大きな決断、始まり、ラッキーチャンス", 
+      reversed: "愚かな決断、無責任、自己中心的な行動" },
+    { name: "魔術師", emoji: "🎩", type: "major",
+      upright: "独創的なアイデアの創造、才能、可能性",
+      reversed: "計画が実現されない、制限、不完全" },
+    { name: "女教皇", emoji: "👸", type: "major",
+      upright: "見えない秘密、知恵が隠されている",
+      reversed: "疑惑、隠蔽、誤解が不幸な結果を招く" },
+    { name: "女帝", emoji: "👑", type: "major",
+      upright: "成長、豊かさ、愛、母性",
+      reversed: "感情の抑制、不安定、不満、無気力" },
+    { name: "皇帝", emoji: "🤴", type: "major",
+      upright: "目標達成、良い結果が出る、権力、強さ",
+      reversed: "無計画、支配欲、独裁、威圧に終わる行動" },
+    { name: "教皇", emoji: "⛪", type: "major",
+      upright: "伝統と秩序を守った目標達成、導き手の出現",
+      reversed: "固定観念にとらわれ、誤解やトラブルが生じる" },
+    { name: "恋人", emoji: "💑", type: "major",
+      upright: "愛、正しい選択、関係",
+      reversed: "未練、葛藤、嫉妬" },
+    { name: "戦車", emoji: "🏇", type: "major",
+      upright: "勝利、行動、決断、心の強さによる克服",
+      reversed: "衝動、攻撃性、挫折、自制心の喪失" },
+    { name: "力", emoji: "🦁", type: "major",
+      upright: "自己理解、忍耐、勇気、克服",
+      reversed: "自己嫌悪、暴力、抑圧、執着" },
+    { name: "隠者", emoji: "🕯️", type: "major",
+      upright: "内省、孤独、精神性、内なる案内人",
+      reversed: "アドバイスの無視、閉鎖、孤立、冷淡" },
+    { name: "運命の輪", emoji: "☸️", type: "major",
+      upright: "運命、変化、循環、チャンス",
+      reversed: "不運、問題の再発、延期、妨害、停滞" },
+    { name: "正義", emoji: "⚖️", type: "major",
+      upright: "正しい判断、公平、適切な報酬",
+      reversed: "非難、制裁、不公平、アンバランス" },
+    { name: "吊された男", emoji: "🙃", type: "major",
+      upright: "犠牲、優先順位の変化",
+      reversed: "自分本位、プライドと執着、停滞" },
+    { name: "死神", emoji: "💀", type: "major",
+      upright: "変化、変容、再生",
+      reversed: "破壊、絶望、衰退" },
+    { name: "節制", emoji: "⚗️", type: "major",
+      upright: "バランス、制御、安定、調和",
+      reversed: "アンバランス、極端、不適切な行動" },
+    { name: "悪魔", emoji: "😈", type: "major",
+      upright: "誘惑、執着、制限",
+      reversed: "解放、自由、脱却" },
+    { name: "塔", emoji: "🗼", type: "major",
+      upright: "破壊、崩壊、変革の訪れ",
+      reversed: "変革の訪れ、再生、希望" },
+    { name: "星", emoji: "⭐", type: "major",
+      upright: "希望、夢、予言",
+      reversed: "一時的な失望、幻滅、挫折" },
+    { name: "月", emoji: "🌙", type: "major",
+      upright: "直感、潜在意識、欺瞞",
+      reversed: "現実、真実、洞察" },
+    { name: "太陽", emoji: "☀️", type: "major",
+      upright: "成功、達成、幸福",
+      reversed: "失敗、挫折、不幸" },
+    { name: "審判", emoji: "📯", type: "major",
+      upright: "赦し、再生、ターニングポイント",
+      reversed: "裁き、現状への執着、変化への恐れ" },
+    { name: "世界", emoji: "🌍", type: "major",
+      upright: "完全性、達成、新たな旅立ち",
+      reversed: "未熟、不足、部分的な成功" },
     
     // 小アルカナ - ワンド（14枚）
-    { name: "ワンドのエース", emoji: "🔥", type: "wands" },
-    { name: "ワンドの2", emoji: "🌋", type: "wands" },
-    { name: "ワンドの3", emoji: "⚡", type: "wands" },
-    { name: "ワンドの4", emoji: "🎆", type: "wands" },
-    { name: "ワンドの5", emoji: "🔆", type: "wands" },
-    { name: "ワンドの6", emoji: "🌟", type: "wands" },
-    { name: "ワンドの7", emoji: "💫", type: "wands" },
-    { name: "ワンドの8", emoji: "✨", type: "wands" },
-    { name: "ワンドの9", emoji: "🎇", type: "wands" },
-    { name: "ワンドの10", emoji: "🎑", type: "wands" },
-    { name: "ワンドのペイジ", emoji: "🧑", type: "wands" },
-    { name: "ワンドのナイト", emoji: "🤺", type: "wands" },
-    { name: "ワンドのクイーン", emoji: "👸🔥", type: "wands" },
-    { name: "ワンドのキング", emoji: "🤴🔥", type: "wands" },
+    { name: "ワンドのエース", emoji: "🔥", type: "wands",
+      upright: "アイデア、新しい可能性、才能",
+      reversed: "制限、不完全、無責任、燃え尽き" },
+    { name: "ワンドの2", emoji: "🌋", type: "wands",
+      upright: "選択、決断、パートナーシップ",
+      reversed: "二分化、対立、分離" },
+    { name: "ワンドの3", emoji: "⚡", type: "wands",
+      upright: "創造性、エネルギー、発展",
+      reversed: "衝動、過剰な自信、失敗" },
+    { name: "ワンドの4", emoji: "🎆", type: "wands",
+      upright: "安定、基盤、成就、祝福",
+      reversed: "退屈、マンネリ化、消極性、誤解" },
+    { name: "ワンドの5", emoji: "🔆", type: "wands",
+      upright: "衝突、競争、対立",
+      reversed: "調和、和解、協力" },
+    { name: "ワンドの6", emoji: "🌟", type: "wands",
+      upright: "勝利、達成、成功",
+      reversed: "失敗、挫折、不満" },
+    { name: "ワンドの7", emoji: "💫", type: "wands",
+      upright: "逆境、防衛、信念",
+      reversed: "諦め、不信、不確実性" },
+    { name: "ワンドの8", emoji: "✨", type: "wands",
+      upright: "急速な進展、達成、旅行、成長",
+      reversed: "障害、衝突、恐れ、トラブル" },
+    { name: "ワンドの9", emoji: "🎇", type: "wands",
+      upright: "完成、成熟、防御、警戒",
+      reversed: "意欲の喪失、自信喪失、諦め" },
+    { name: "ワンドの10", emoji: "🎑", type: "wands",
+      upright: "達成、プレッシャー、重荷、責任",
+      reversed: "疲弊、大きすぎるプレッシャー、限界" },
+    { name: "ワンドのペイジ", emoji: "🧑", type: "wands",
+      upright: "情熱、無限の可能性、才能",
+      reversed: "誇大妄想、不完全、迷い道と試練" },
+    { name: "ワンドのナイト", emoji: "🤺", type: "wands",
+      upright: "情熱、大胆な行動、積極性",
+      reversed: "衝動的、無謀、空回り" },
+    { name: "ワンドのクイーン", emoji: "👸🔥", type: "wands",
+      upright: "創造性、エネルギー、魅力",
+      reversed: "支配欲、独善、傲慢" },
+    { name: "ワンドのキング", emoji: "🤴🔥", type: "wands",
+      upright: "権力、カリスマ性、ビジョン",
+      reversed: "独裁、傲慢、金の亡者" },
     
     // 小アルカナ - カップ（14枚）
-    { name: "カップのエース", emoji: "🏆", type: "cups" },
-    { name: "カップの2", emoji: "💕", type: "cups" },
-    { name: "カップの3", emoji: "🎉", type: "cups" },
-    { name: "カップの4", emoji: "😔", type: "cups" },
-    { name: "カップの5", emoji: "😢", type: "cups" },
-    { name: "カップの6", emoji: "🌸", type: "cups" },
-    { name: "カップの7", emoji: "💭", type: "cups" },
-    { name: "カップの8", emoji: "🚶", type: "cups" },
-    { name: "カップの9", emoji: "😊", type: "cups" },
-    { name: "カップの10", emoji: "🌈", type: "cups" },
-    { name: "カップのペイジ", emoji: "👦", type: "cups" },
-    { name: "カップのナイト", emoji: "🦄", type: "cups" },
-    { name: "カップのクイーン", emoji: "👸💧", type: "cups" },
-    { name: "カップのキング", emoji: "🤴💧", type: "cups" },
+    { name: "カップのエース", emoji: "🏆", type: "cups",
+      upright: "愛、新たな感情、恋愛成就",
+      reversed: "失恋、心の乱れ、ネガティブな感情" },
+    { name: "カップの2", emoji: "💕", type: "cups",
+      upright: "調和、協力、パートナーシップ",
+      reversed: "二つの選択肢、別離、復讐" },
+    { name: "カップの3", emoji: "🎉", type: "cups",
+      upright: "幸福、喜び、満足、祝福",
+      reversed: "不幸の連鎖、苦しみ、依存症" },
+    { name: "カップの4", emoji: "😔", type: "cups",
+      upright: "停滞、休息が必要、熟慮",
+      reversed: "不安定、無関心、現実逃避" },
+    { name: "カップの5", emoji: "😢", type: "cups",
+      upright: "心痛、悲しみ、喪失、破談",
+      reversed: "改善、希望、自信" },
+    { name: "カップの6", emoji: "🌸", type: "cups",
+      upright: "温もり、祝福、家庭的な幸せ",
+      reversed: "過去との決別、旅立ち、縁切り" },
+    { name: "カップの7", emoji: "💭", type: "cups",
+      upright: "幻想と夢、現実のギャップ",
+      reversed: "夢からの目覚め、現実と向き合う" },
+    { name: "カップの8", emoji: "🚶", type: "cups",
+      upright: "心の整理、新たな旅立ち、交代",
+      reversed: "放棄、出会い、好転" },
+    { name: "カップの9", emoji: "😊", type: "cups",
+      upright: "満足、充実、願望成就",
+      reversed: "不満、燃え尽き、過剰な期待" },
+    { name: "カップの10", emoji: "🌈", type: "cups",
+      upright: "家庭的な幸せ、充実、繁栄",
+      reversed: "愛情不足、崩壊、不満" },
+    { name: "カップのペイジ", emoji: "👦", type: "cups",
+      upright: "新しい恋、才能、純粋な好奇心",
+      reversed: "優柔不断、妄想、現実逃避" },
+    { name: "カップのナイト", emoji: "🦄", type: "cups",
+      upright: "情熱、積極性、理想、ロマンス",
+      reversed: "感情の混乱、不誠実、無謀" },
+    { name: "カップのクイーン", emoji: "👸💧", type: "cups",
+      upright: "愛、慈愛、癒し",
+      reversed: "情緒不安定、犠牲、現実逃避" },
+    { name: "カップのキング", emoji: "🤴💧", type: "cups",
+      upright: "責任感、冷静な判断力、知性",
+      reversed: "独裁、未熟、傲慢、ノイローゼ" },
     
     // 小アルカナ - ソード（14枚）
-    { name: "ソードのエース", emoji: "⚔️", type: "swords" },
-    { name: "ソードの2", emoji: "🤷", type: "swords" },
-    { name: "ソードの3", emoji: "💔", type: "swords" },
-    { name: "ソードの4", emoji: "😴", type: "swords" },
-    { name: "ソードの5", emoji: "⚡", type: "swords" },
-    { name: "ソードの6", emoji: "⛵", type: "swords" },
-    { name: "ソードの7", emoji: "🥷", type: "swords" },
-    { name: "ソードの8", emoji: "🪢", type: "swords" },
-    { name: "ソードの9", emoji: "😰", type: "swords" },
-    { name: "ソードの10", emoji: "🗡️", type: "swords" },
-    { name: "ソードのペイジ", emoji: "🧒", type: "swords" },
-    { name: "ソードのナイト", emoji: "🐎", type: "swords" },
-    { name: "ソードのクイーン", emoji: "👸⚔️", type: "swords" },
-    { name: "ソードのキング", emoji: "🤴⚔️", type: "swords" },
+    { name: "ソードのエース", emoji: "⚔️", type: "swords",
+      upright: "知性、明晰な思考、洞察力",
+      reversed: "混乱、誤解、八方塞がり" },
+    { name: "ソードの2", emoji: "🤷", type: "swords",
+      upright: "選択、決断、葛藤",
+      reversed: "優柔不断、自己欺瞞、二分化" },
+    { name: "ソードの3", emoji: "💔", type: "swords",
+      upright: "心の痛み、悲しみ",
+      reversed: "自己欺瞞、被害者意識、心の閉ざし" },
+    { name: "ソードの4", emoji: "😴", type: "swords",
+      upright: "休息が必要、保護、静養",
+      reversed: "新規、再出発、休息の拒否" },
+    { name: "ソードの5", emoji: "⚡", type: "swords",
+      upright: "対立、闘争、攻撃",
+      reversed: "敗北、無力感、負け惜しみ" },
+    { name: "ソードの6", emoji: "⛵", type: "swords",
+      upright: "変化、好転、引越し",
+      reversed: "困難、行き詰まり、失敗" },
+    { name: "ソードの7", emoji: "🥷", type: "swords",
+      upright: "策略、裏切り、自滅",
+      reversed: "誤解、勘違い、謝罪" },
+    { name: "ソードの8", emoji: "🪢", type: "swords",
+      upright: "心の戦い、試練、成長",
+      reversed: "解放、自由、復活" },
+    { name: "ソードの9", emoji: "😰", type: "swords",
+      upright: "苦しみ、悲しみ、苦悩",
+      reversed: "救済、癒し、希望" },
+    { name: "ソードの10", emoji: "🗡️", type: "swords",
+      upright: "破壊、喪失、敗北",
+      reversed: "再生、再構築、改善、希望" },
+    { name: "ソードのペイジ", emoji: "🧒", type: "swords",
+      upright: "知性、思考、好奇心",
+      reversed: "混乱、誤解、不確実性" },
+    { name: "ソードのナイト", emoji: "🐎", type: "swords",
+      upright: "行動力、決断力、攻撃性",
+      reversed: "衝動、無謀、失敗" },
+    { name: "ソードのクイーン", emoji: "👸⚔️", type: "swords",
+      upright: "理性、知恵、冷静さ、洞察力",
+      reversed: "被害妄想、嫉妬心、猜疑心" },
+    { name: "ソードのキング", emoji: "🤴⚔️", type: "swords",
+      upright: "公正、権威、冷静沈着",
+      reversed: "独裁、強引、傲慢" },
     
     // 小アルカナ - ペンタクル（14枚）
-    { name: "ペンタクルのエース", emoji: "💰", type: "pentacles" },
-    { name: "ペンタクルの2", emoji: "⚖️", type: "pentacles" },
-    { name: "ペンタクルの3", emoji: "🏗️", type: "pentacles" },
-    { name: "ペンタクルの4", emoji: "🔒", type: "pentacles" },
-    { name: "ペンタクルの5", emoji: "🚪", type: "pentacles" },
-    { name: "ペンタクルの6", emoji: "🤝", type: "pentacles" },
-    { name: "ペンタクルの7", emoji: "🌱", type: "pentacles" },
-    { name: "ペンタクルの8", emoji: "🔨", type: "pentacles" },
-    { name: "ペンタクルの9", emoji: "🎭", type: "pentacles" },
-    { name: "ペンタクルの10", emoji: "🏰", type: "pentacles" },
-    { name: "ペンタクルのペイジ", emoji: "👨‍🎓", type: "pentacles" },
-    { name: "ペンタクルのナイト", emoji: "🐢", type: "pentacles" },
-    { name: "ペンタクルのクイーン", emoji: "👸💎", type: "pentacles" },
-    { name: "ペンタクルのキング", emoji: "🤴💎", type: "pentacles" }
+    { name: "ペンタクルのエース", emoji: "💰", type: "pentacles",
+      upright: "金銭的な成功、富、精神の充実",
+      reversed: "貧困、失敗、不満" },
+    { name: "ペンタクルの2", emoji: "⚖️", type: "pentacles",
+      upright: "バランス、柔軟性、調和",
+      reversed: "不安定、不調和、分離" },
+    { name: "ペンタクルの3", emoji: "🏗️", type: "pentacles",
+      upright: "勤勉、努力、収穫",
+      reversed: "怠惰、無駄、失敗" },
+    { name: "ペンタクルの4", emoji: "🔒", type: "pentacles",
+      upright: "経済基盤、守銭奴、独占欲",
+      reversed: "倹約、計画性、長期的なプラン" },
+    { name: "ペンタクルの5", emoji: "🚪", type: "pentacles",
+      upright: "経済的な喪失、不健康、孤独",
+      reversed: "努力が報われる、希望、解放、好転" },
+    { name: "ペンタクルの6", emoji: "🤝", type: "pentacles",
+      upright: "報酬、ギブアンドテイク、慈悲",
+      reversed: "不公平、搾取、バランスの欠如" },
+    { name: "ペンタクルの7", emoji: "🌱", type: "pentacles",
+      upright: "小さな幸せ、物足りなさ、再考",
+      reversed: "不確実性、浪費、負債、幻滅" },
+    { name: "ペンタクルの8", emoji: "🔨", type: "pentacles",
+      upright: "努力、成長、繁栄",
+      reversed: "手抜き、詐欺、自惚れ" },
+    { name: "ペンタクルの9", emoji: "🎭", type: "pentacles",
+      upright: "繁栄、豊かさ、満足感、独立",
+      reversed: "慢心、甘え、過度な自立心、損失" },
+    { name: "ペンタクルの10", emoji: "🏰", type: "pentacles",
+      upright: "豊かさ、順調、長期的な安定",
+      reversed: "危険、不安定、経済的困窮" },
+    { name: "ペンタクルのペイジ", emoji: "👨‍🎓", type: "pentacles",
+      upright: "才能、実践的な学び、成長",
+      reversed: "不完全、無責任、反抗心" },
+    { name: "ペンタクルのナイト", emoji: "🐢", type: "pentacles",
+      upright: "誠実、努力、勤勉",
+      reversed: "怠惰、計算高い、優柔不断" },
+    { name: "ペンタクルのクイーン", emoji: "👸💎", type: "pentacles",
+      upright: "豊かさ、繁栄、恵み",
+      reversed: "欲望、執着、物質主義" },
+    { name: "ペンタクルのキング", emoji: "🤴💎", type: "pentacles",
+      upright: "権力、財力、成功",
+      reversed: "物質主義、過剰な管理、傲慢" }
 ];
 
 // 12ハウスの意味
@@ -204,34 +360,39 @@ async function generateReading() {
     readingContent.innerHTML = '<div class="loading">リーディングを生成中</div>';
     
     try {
+        // カード情報を詳細に整理
+        const cardDetails = selectedCards.map((card, i) => {
+            const house = houses[i];
+            const meaning = card.reversed ? card.reversed : card.upright;
+            return `${house.name}（${house.meaning}）: ${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}
+意味: ${meaning}`;
+        }).join('\n\n');
+
         const prompt = `あなたは経験豊富なタロット占い師です。以下のホロスコープ・スプレッドの結果に基づいて、今月の運勢を占ってください。
 
-各ハウスに出たカードは以下の通りです：
-
-${selectedCards.map((card, i) => 
-    `${houses[i].name}（${houses[i].meaning}）: ${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}`
-).join('\n')}
+【出たカードと意味】
+${cardDetails}
 
 【重要な指示】
-以下のフォーマットで、各ハウスごとに均一で詳しいリーディングを提供してください：
+1. 各ハウスについて、以下の構成で必ず250-300文字程度の詳細なリーディングを書いてください：
+   - カードの意味とハウスのテーマをどう組み合わせるか（80-100文字）
+   - 今月の具体的な展開や状況の予測（100-120文字）
+   - 実践的なアドバイスや心構え（70-80文字）
 
-各ハウスのリーディングは必ず以下の3つの要素を含めてください：
-1. カードの基本的な意味とハウスのテーマの組み合わせ（2-3文）
-2. 今月の具体的な展開や状況の予測（2-3文）
-3. アドバイスや心構え（1-2文）
+2. 各ハウスのリーディングは必ず同じくらいの長さと詳しさにしてください。
 
-各ハウスのリーディングは200-250文字程度で、全てのハウスで同じくらいの長さ・詳しさにしてください。
-
-出力フォーマット：
+3. 以下のフォーマットで出力してください：
 ---第1ハウス---
-[ここにリーディング内容]
+[250-300文字の詳細なリーディング]
 
 ---第2ハウス---
-[ここにリーディング内容]
+[250-300文字の詳細なリーディング]
 
-（以下同様に第12ハウスまで）
+（以下、第12ハウスまで同様に）
 
-温かく、前向きで、具体的なアドバイスを心がけてください。`;
+4. 抽象的な表現は避け、具体的で実践的なアドバイスを含めてください。
+
+5. 温かく、前向きで、読んだ人が勇気づけられる内容にしてください。`;
 
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
@@ -240,7 +401,7 @@ ${selectedCards.map((card, i) =>
             },
             body: JSON.stringify({
                 model: 'claude-sonnet-4-20250514',
-                max_tokens: 4000,
+                max_tokens: 6000,
                 messages: [{
                     role: 'user',
                     content: prompt
@@ -257,14 +418,15 @@ ${selectedCards.map((card, i) =>
         
         selectedCards.forEach((card, index) => {
             const house = houses[index];
-            const readingText = sections[index] || 
-                `このハウスでは${card.name}${card.reversed ? '（逆位置）' : ''}が示されています。${house.meaning}の分野において、重要なメッセージがあります。`;
+            const meaning = card.reversed ? card.reversed : card.upright;
+            const readingText = sections[index]?.trim() || 
+                `このハウスでは${card.name}${card.reversed ? '（逆位置）' : ''}が示されています。${meaning}という意味を持ち、${house.meaning}の分野に影響を与えます。カードが示すメッセージを受け取り、今月の指針としてください。`;
             
             html += `
                 <div class="house-reading">
                     <h3>${house.name} - ${house.meaning}</h3>
-                    <div class="card-info">${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}</div>
-                    <p>${readingText.trim()}</p>
+                    <div class="card-info">${card.name}${card.reversed ? '（逆位置）' : '（正位置）'} - ${meaning}</div>
+                    <p>${readingText}</p>
                 </div>
             `;
         });
@@ -272,15 +434,18 @@ ${selectedCards.map((card, i) =>
         readingContent.innerHTML = html;
         
     } catch (error) {
-        // エラー時のフォールバック
+        // エラー時は詳細な意味を使ったフォールバック
         let html = '';
         selectedCards.forEach((card, index) => {
             const house = houses[index];
+            const meaning = card.reversed ? card.reversed : card.upright;
+            
             html += `
                 <div class="house-reading">
                     <h3>${house.name} - ${house.meaning}</h3>
                     <div class="card-info">${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}</div>
-                    <p>このハウスでは${card.name}${card.reversed ? '（逆位置）' : ''}が示されています。${house.meaning}の分野において、カードが重要なメッセージを伝えています。カードの意味を深く瞑想し、ご自身の状況と照らし合わせてみてください。</p>
+                    <p><strong>カードの意味:</strong> ${meaning}<br><br>
+                    このカードは${house.meaning}の領域において、「${meaning}」というテーマを示しています。今月は、このカードのメッセージを意識しながら、${house.meaning}に関する事柄に向き合うことで、より良い方向へ進むことができるでしょう。カードの示す意味を深く受け止め、日々の行動の指針としてください。</p>
                 </div>
             `;
         });

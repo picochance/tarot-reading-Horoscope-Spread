@@ -398,6 +398,7 @@ async function generateReading() {
         const resultCard = selectedCards[12];
         const resultMeaning = resultCard.isReversed ? resultCard.reversed : resultCard.upright;
 
+        // AI プロンプト
         const prompt = `
 あなたは経験豊富なタロット占い師です。
 
@@ -427,6 +428,7 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
 （総合テーマのリーディング）
 `;
 
+        // API 呼び出し
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
             headers: {
@@ -442,32 +444,42 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         const data = await response.json();
         const reading = data.content[0].text;
 
-        // --- パースして表示 ---
+        // --- パースして HTML に変換 ---
         let html = "";
-        const sections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
 
-        // 12ハウス
+        // 12ハウスのリーディングを抽出
+        const houseSections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
+
+        // 12ハウス分を出力
         selectedCards.slice(0, 12).forEach((card, index) => {
             const house = houses[index];
             const meaning = card.isReversed ? card.reversed : card.upright;
-            const readingText = sections[index]?.trim() || "リーディング生成に失敗しました。";
+
+            const readingText = houseSections[index]?.trim() || 
+                "リーディング生成に失敗しました。";
 
             html += `
                 <div class="house-reading">
                     <h3>${house.name} - ${house.meaning}</h3>
-                    <div class="card-info">${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}</div>
+                    <div class="card-info">
+                        ${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}
+                    </div>
                     <p>${readingText}</p>
                 </div>
             `;
         });
 
-        // --- 結果カード ---
-        const resultSection = reading.split(/---結果カード---/)[1]?.trim() || "総合テーマの生成に失敗しました。";
+        // --- 結果カードのリーディング ---
+        const resultSection = reading.split(/---結果カード---/)[1]?.trim() ||
+            "総合テーマの生成に失敗しました。";
 
         html += `
-            <div class="house-reading" style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
+            <div class="house-reading" 
+                 style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
                 <h3>結果カード（今月の総合テーマ）</h3>
-                <div class="card-info">${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}</div>
+                <div class="card-info">
+                    ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}
+                </div>
                 <p>${resultSection}</p>
             </div>
         `;

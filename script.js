@@ -378,118 +378,106 @@ async function revealCards() {
     await new Promise(resolve => setTimeout(resolve, 800));
 }
 
-// AIリーディングを生成
 async function generateReading() {
     const readingSection = document.getElementById('readingSection');
     const readingContent = document.getElementById('readingContent');
-    
+
     readingSection.classList.add('show');
     readingContent.innerHTML = '<div class="loading">リーディングを生成中</div>';
-    
+
     try {
-        // カード情報を詳細に整理
-        const cardDetails = selectedCards.map((card, i) => {
+        // 12ハウス分のカード情報
+        const cardDetails = selectedCards.slice(0, 12).map((card, i) => {
             const house = houses[i];
             const meaning = card.isReversed ? card.reversed : card.upright;
-            return `${house.name}（${house.meaning}）: ${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}
+            return `${house.name}（${house.meaning}）: ${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'}
 意味: ${meaning}`;
         }).join('\n\n');
 
-        const prompt = `あなたは経験豊富なタロット占い師です。以下のホロスコープ・スプレッドの結果に基づいて、今月の運勢を占ってください。
+        // 結果カード（13枚目）
+        const resultCard = selectedCards[12];
+        const resultMeaning = resultCard.isReversed ? resultCard.reversed : resultCard.upright;
 
-【出たカードと意味】
+        const prompt = `
+あなたは経験豊富なタロット占い師です。
+
+【12ハウスのカード】
 ${cardDetails}
 
+【結果カード（今月の総合テーマ）】
+${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'}
+意味: ${resultMeaning}
+
 【重要な指示】
-1. 各ハウスについて、以下の構成で必ず250-300文字程度の詳細なリーディングを書いてください：
-   - カードの意味とハウスのテーマをどう組み合わせるか（80-100文字）
-   - 今月の具体的な展開や状況の予測（100-120文字）
-   - 実践的なアドバイスや心構え（70-80文字）
+1. 第1〜第12ハウスはそれぞれ250〜300文字でリーディングを書くこと。
+2. 結果カードは「今月の総合テーマ」として300文字前後でまとめること。
+3. 抽象表現を避け、具体的で実践的なアドバイスを含めること。
+4. 温かく前向きな語り口で書くこと。
 
-2. 各ハウスのリーディングは必ず同じくらいの長さと詳しさにしてください。
-
-3. 以下のフォーマットで出力してください：
+【出力フォーマット】
 ---第1ハウス---
-[250-300文字の詳細なリーディング]
+（リーディング）
 
----第2ハウス---
-[250-300文字の詳細なリーディング]
+...
 
-（以下、第12ハウスまで同様に）
+---第12ハウス---
+（リーディング）
 
-4. 抽象的な表現は避け、具体的で実践的なアドバイスを含めてください。
+---結果カード---
+（総合テーマのリーディング）
+`;
 
-5. 温かく、前向きで、読んだ人が勇気づけられる内容にしてください。`;
-
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
+                model: "claude-sonnet-4-20250514",
                 max_tokens: 6000,
-                messages: [{
-                    role: 'user',
-                    content: prompt
-                }]
+                messages: [{ role: "user", content: prompt }]
             })
         });
 
         const data = await response.json();
         const reading = data.content[0].text;
-        
-        // リーディングをパースして表示
-        let html = '';
+
+        // --- パースして表示 ---
+        let html = "";
         const sections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
-        
-        selectedCards.forEach((card, index) => {
+
+        // 12ハウス
+        selectedCards.slice(0, 12).forEach((card, index) => {
             const house = houses[index];
-            const meaning = card.reversed ? card.reversed : card.upright;
-            const readingText = sections[index]?.trim() || 
-                `このハウスでは${card.name}${card.reversed ? '（逆位置）' : ''}が示されています。${meaning}という意味を持ち、${house.meaning}の分野に影響を与えます。カードが示すメッセージを受け取り、今月の指針としてください。`;
-            
+            const meaning = card.isReversed ? card.reversed : card.upright;
+            const readingText = sections[index]?.trim() || "リーディング生成に失敗しました。";
+
             html += `
                 <div class="house-reading">
                     <h3>${house.name} - ${house.meaning}</h3>
-                    <div class="card-info">${card.name}${card.reversed ? '（逆位置）' : '（正位置）'} - ${meaning}</div>
+                    <div class="card-info">${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}</div>
                     <p>${readingText}</p>
                 </div>
             `;
         });
-        
-        readingContent.innerHTML = html;
-        
-    } catch (error) {
-        // エラー時は詳細な意味を使ったフォールバック
-        let html = '';
-        selectedCards.forEach((card, index) => {
-            const house = houses[index];
-            const meaning = card.reversed ? card.reversed : card.upright;
-            
-            html += `
-                <div class="house-reading">
-                    <h3>${house.name} - ${house.meaning}</h3>
-                    <div class="card-info">${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}</div>
-                    <p><strong>カードの意味:</strong> ${meaning}<br><br>
-                    このカードは${house.meaning}の領域において、「${meaning}」というテーマを示しています。今月は、このカードのメッセージを意識しながら、${house.meaning}に関する事柄に向き合うことで、より良い方向へ進むことができるでしょう。カードの示す意味を深く受け止め、日々の行動の指針としてください。</p>
-                </div>
-            `;
-        });
-        readingContent.innerHTML = html;
-        console.error('Reading generation error:', error);
-    }
-	// ★ 結果カードのリーディング追加
-	const resultCard = selectedCards[12];
-	const resultMeaning = resultCard.isReversed ? resultCard.reversed : resultCard.upright;
 
-	html += `
-	    <div class="house-reading" style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
-	        <h3>結果カード（今月の総合テーマ）</h3>
-	        <div class="card-info">${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}</div>
-	        <p>このカードは今月全体の流れやテーマを象徴しています。12ハウスの流れをまとめ、あなたが今月どのような姿勢で過ごすべきかを示す重要なメッセージです。</p>
-	    </div>
-	`;
+        // --- 結果カード ---
+        const resultSection = reading.split(/---結果カード---/)[1]?.trim() || "総合テーマの生成に失敗しました。";
+
+        html += `
+            <div class="house-reading" style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
+                <h3>結果カード（今月の総合テーマ）</h3>
+                <div class="card-info">${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}</div>
+                <p>${resultSection}</p>
+            </div>
+        `;
+
+        readingContent.innerHTML = html;
+
+    } catch (error) {
+        console.error("Reading generation error:", error);
+        readingContent.innerHTML = "<p>リーディング生成中にエラーが発生しました。</p>";
+    }
 }
 
 // 占いを開始

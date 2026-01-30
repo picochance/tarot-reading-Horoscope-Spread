@@ -269,7 +269,7 @@ let isShuffling = false;
 function initializeDeck() {
     currentDeck = tarotDeck.map(card => ({
         ...card,
-        reversed: Math.random() > 0.5
+        isReversed: Math.random() > 0.5
     }));
 }
 
@@ -300,15 +300,17 @@ function layoutCards() {
     const radius = 250;
     const centerX = 350;
     const centerY = 350;
-    
-    selectedCards = currentDeck.slice(0, 12);
-    
-    selectedCards.forEach((card, index) => {
+
+    // ★ 13枚選ぶ（12ハウス＋中央カード）
+    selectedCards = currentDeck.slice(0, 13);
+
+    // ★ 最初の12枚をホロスコープ配置
+    selectedCards.slice(0, 12).forEach((card, index) => {
         const house = houses[index];
         const angle = (house.angle - 90) * Math.PI / 180;
         const x = centerX + radius * Math.cos(angle) - 45;
         const y = centerY + radius * Math.sin(angle) - 70;
-        
+
         const cardEl = document.createElement('div');
         cardEl.className = 'card';
         cardEl.style.left = `${x}px`;
@@ -316,20 +318,20 @@ function layoutCards() {
         cardEl.innerHTML = `
             <div class="card-inner">
                 <div class="card-face card-back"></div>
-                <div class="card-face card-front ${card.reversed ? 'reversed' : ''}">
+                <div class="card-face card-front ${card.isReversed ? 'reversed' : ''}">
                     <div class="card-emoji">${card.emoji}</div>
-                    <div class="card-name">${card.name}${card.reversed ? '<br>(逆位置)' : ''}</div>
+                    <div class="card-name">${card.name}${card.isReversed ? '<br>(逆位置)' : ''}</div>
                 </div>
             </div>
         `;
         wheel.appendChild(cardEl);
-        
+
         // ハウスラベル
         const labelAngle = house.angle * Math.PI / 180;
         const labelRadius = radius + 60;
         const labelX = centerX + labelRadius * Math.cos(labelAngle) - 40;
         const labelY = centerY + labelRadius * Math.sin(labelAngle) - 10;
-        
+
         const label = document.createElement('div');
         label.className = 'house-label';
         label.style.left = `${labelX}px`;
@@ -337,6 +339,31 @@ function layoutCards() {
         label.textContent = house.name;
         wheel.appendChild(label);
     });
+
+	// ★ 13枚目（中央カード：結果カード）
+	const centerCard = selectedCards[12];
+	const centerEl = document.createElement('div');
+	centerEl.className = 'card result-card'; // ← 特別クラスを追加
+	centerEl.style.left = `${centerX - 55}px`; // 少し大きくしたので調整
+	centerEl.style.top = `${centerY - 90}px`;
+	centerEl.innerHTML = `
+	    <div class="card-inner">
+	        <div class="card-face card-back"></div>
+	        <div class="card-face card-front ${centerCard.isReversed ? 'reversed' : ''}">
+	            <div class="card-emoji">${centerCard.emoji}</div>
+	            <div class="card-name">${centerCard.name}${centerCard.isReversed ? '<br>(逆位置)' : ''}</div>
+	        </div>
+	    </div>
+	`;
+	wheel.appendChild(centerEl);
+
+	// ★ 結果カードのラベル
+	const resultLabel = document.createElement('div');
+	resultLabel.className = 'result-label';
+	resultLabel.textContent = "結果カード";
+	wheel.appendChild(resultLabel);
+
+
 }
 
 // カードを一気にオープン
@@ -363,7 +390,7 @@ async function generateReading() {
         // カード情報を詳細に整理
         const cardDetails = selectedCards.map((card, i) => {
             const house = houses[i];
-            const meaning = card.reversed ? card.reversed : card.upright;
+            const meaning = card.isReversed ? card.reversed : card.upright;
             return `${house.name}（${house.meaning}）: ${card.name}${card.reversed ? '（逆位置）' : '（正位置）'}
 意味: ${meaning}`;
         }).join('\n\n');
@@ -452,6 +479,17 @@ ${cardDetails}
         readingContent.innerHTML = html;
         console.error('Reading generation error:', error);
     }
+	// ★ 結果カードのリーディング追加
+	const resultCard = selectedCards[12];
+	const resultMeaning = resultCard.isReversed ? resultCard.reversed : resultCard.upright;
+
+	html += `
+	    <div class="house-reading" style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
+	        <h3>結果カード（今月の総合テーマ）</h3>
+	        <div class="card-info">${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}</div>
+	        <p>このカードは今月全体の流れやテーマを象徴しています。12ハウスの流れをまとめ、あなたが今月どのような姿勢で過ごすべきかを示す重要なメッセージです。</p>
+	    </div>
+	`;
 }
 
 // 占いを開始

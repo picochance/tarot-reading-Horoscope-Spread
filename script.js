@@ -340,30 +340,28 @@ function layoutCards() {
         wheel.appendChild(label);
     });
 
-	// ★ 13枚目（中央カード：結果カード）
-	const centerCard = selectedCards[12];
-	const centerEl = document.createElement('div');
-	centerEl.className = 'card result-card'; // ← 特別クラスを追加
-	centerEl.style.left = `${centerX - 55}px`; // 少し大きくしたので調整
-	centerEl.style.top = `${centerY - 90}px`;
-	centerEl.innerHTML = `
-	    <div class="card-inner">
-	        <div class="card-face card-back"></div>
-	        <div class="card-face card-front ${centerCard.isReversed ? 'reversed' : ''}">
-	            <div class="card-emoji">${centerCard.emoji}</div>
-	            <div class="card-name">${centerCard.name}${centerCard.isReversed ? '<br>(逆位置)' : ''}</div>
-	        </div>
-	    </div>
-	`;
-	wheel.appendChild(centerEl);
+    // ★ 13枚目（中央カード：結果カード）
+    const centerCard = selectedCards[12];
+    const centerEl = document.createElement('div');
+    centerEl.className = 'card result-card';
+    centerEl.style.left = `${centerX - 55}px`;
+    centerEl.style.top = `${centerY - 90}px`;
+    centerEl.innerHTML = `
+        <div class="card-inner">
+            <div class="card-face card-back"></div>
+            <div class="card-face card-front ${centerCard.isReversed ? 'reversed' : ''}">
+                <div class="card-emoji">${centerCard.emoji}</div>
+                <div class="card-name">${centerCard.name}${centerCard.isReversed ? '<br>(逆位置)' : ''}</div>
+            </div>
+        </div>
+    `;
+    wheel.appendChild(centerEl);
 
-	// ★ 結果カードのラベル
-	const resultLabel = document.createElement('div');
-	resultLabel.className = 'result-label';
-	resultLabel.textContent = "結果カード";
-	wheel.appendChild(resultLabel);
-
-
+    // ★ 結果カードのラベル
+    const resultLabel = document.createElement('div');
+    resultLabel.className = 'result-label';
+    resultLabel.textContent = "結果カード";
+    wheel.appendChild(resultLabel);
 }
 
 // カードを一気にオープン
@@ -378,6 +376,9 @@ async function revealCards() {
     await new Promise(resolve => setTimeout(resolve, 800));
 }
 
+// ===============================
+// ★ generateReading（完全修正版）
+// ===============================
 async function generateReading() {
     const readingSection = document.getElementById('readingSection');
     const readingContent = document.getElementById('readingContent');
@@ -400,40 +401,32 @@ async function generateReading() {
 
         // AI プロンプト
         const prompt = `
-あなたは経験豊富なタロット占い師です。
-
 【12ハウスのカード】
 ${cardDetails}
 
-【結果カード（今月の総合テーマ）】
+【結果カード】
 ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'}
 意味: ${resultMeaning}
 
-【重要な指示】
-1. 第1〜第12ハウスはそれぞれ250〜300文字でリーディングを書くこと。
-2. 結果カードは「今月の総合テーマ」として300文字前後でまとめること。
-3. 抽象表現を避け、具体的で実践的なアドバイスを含めること。
-4. 温かく前向きな語り口で書くこと。
-
-【出力フォーマット】
 ---第1ハウス---
-（リーディング）
-
-...
-
+---第2ハウス---
+---第3ハウス---
+---第4ハウス---
+---第5ハウス---
+---第6ハウス---
+---第7ハウス---
+---第8ハウス---
+---第9ハウス---
+---第10ハウス---
+---第11ハウス---
 ---第12ハウス---
-（リーディング）
-
 ---結果カード---
-（総合テーマのリーディング）
 `;
 
         // API 呼び出し
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "claude-sonnet-4-20250514",
                 max_tokens: 6000,
@@ -447,72 +440,74 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         // --- パースして HTML に変換 ---
         let html = "";
 
-	// 12ハウスのリーディングを抽出
-	const houseSections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
+        const houseSections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
 
-	// 12ハウス分を出力
-	selectedCards.slice(0, 12).forEach((card, index) => {
-	    const house = houses[index];
-	    const meaning = card.isReversed ? card.reversed : card.upright;
+        // 12ハウス
+        selectedCards.slice(0, 12).forEach((card, index) => {
+            const house = houses[index];
+            const meaning = card.isReversed ? card.reversed : card.upright;
+            const readingText = houseSections[index]?.trim() || "生成失敗";
 
-	    const readingText = houseSections[index]?.trim() || 
-	        "リーディング生成に失敗しました。";
+            html += `
+                <div class="house-reading">
+                    <h3>${house.name} - ${house.meaning}</h3>
+                    <div class="card-info">${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}</div>
+                    <p>${readingText}</p>
+                </div>
+            `;
+        });
 
-	    html += `
-	        <div class="house-reading">
-	            <h3>${house.name} - ${house.meaning}</h3>
-	            <div class="card-info">
-	                ${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}
-	            </div>
-	            <p>${readingText}</p>
-	        </div>
-	    `;
-	});
+        // 結果カード
+        const resultSection = reading.split(/---結果カード---/)[1]?.trim() || "生成失敗";
 
-	// ★★★ ここが抜けていた！追加してください ★★★
-	const resultCard = selectedCards[12];
-	const resultMeaning = resultCard.isReversed ? resultCard.reversed : resultCard.upright;
+        html += `
+            <div class="house-reading" style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
+                <h3>結果カード（今月の総合テーマ）</h3>
+                <div class="card-info">${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}</div>
+                <p>${resultSection}</p>
+            </div>
+        `;
 
-	// --- 結果カードのリーディング ---
-	const resultSection = reading.split(/---結果カード---/)[1]?.trim() ||
-	    "総合テーマの生成に失敗しました。";
+        readingContent.innerHTML = html;
 
-	html += `
-	    <div class="house-reading" 
-	         style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
-	        <h3>結果カード（今月の総合テーマ）</h3>
-	        <div class="card-info">
-	            ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}
-	        </div>
-	        <p>${resultSection}</p>
-	    </div>
-	`;
+    } catch (error) {
+        console.error("Reading generation error:", error);
+        readingContent.innerHTML = "<p>リーディング生成中にエラーが発生しました。</p>";
+    }
+}
 
-	readingContent.innerHTML = html;
+// ===============================
+// ★ startReading（完全修正版）
+// ===============================
+async function startReading() {
+    if (isShuffling) return;
+    isShuffling = true;
+
+    const startButton = document.getElementById('startButton');
     startButton.disabled = true;
-    
+
     document.getElementById('shuffleStatus').textContent = 'カードを準備中...';
-    
+
     // シャッフル
     await shuffleDeck();
-    
+
     document.getElementById('shuffleStatus').textContent = 'カードを配置中...';
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     // レイアウト
     layoutCards();
     await new Promise(resolve => setTimeout(resolve, 800));
-    
+
     document.getElementById('shuffleStatus').textContent = 'カードをオープン...';
-    
+
     // カードを開く
     await revealCards();
-    
+
     document.getElementById('shuffleStatus').textContent = '';
-    
+
     // リーディング生成
     await generateReading();
-    
+
     isShuffling = false;
 }
 

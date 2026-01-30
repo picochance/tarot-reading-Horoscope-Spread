@@ -447,57 +447,48 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         // --- パースして HTML に変換 ---
         let html = "";
 
-        // 12ハウスのリーディングを抽出
-        const houseSections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
+	// 12ハウスのリーディングを抽出
+	const houseSections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
 
-        // 12ハウス分を出力
-        selectedCards.slice(0, 12).forEach((card, index) => {
-            const house = houses[index];
-            const meaning = card.isReversed ? card.reversed : card.upright;
+	// 12ハウス分を出力
+	selectedCards.slice(0, 12).forEach((card, index) => {
+	    const house = houses[index];
+	    const meaning = card.isReversed ? card.reversed : card.upright;
 
-            const readingText = houseSections[index]?.trim() || 
-                "リーディング生成に失敗しました。";
+	    const readingText = houseSections[index]?.trim() || 
+	        "リーディング生成に失敗しました。";
 
-            html += `
-                <div class="house-reading">
-                    <h3>${house.name} - ${house.meaning}</h3>
-                    <div class="card-info">
-                        ${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}
-                    </div>
-                    <p>${readingText}</p>
-                </div>
-            `;
-        });
+	    html += `
+	        <div class="house-reading">
+	            <h3>${house.name} - ${house.meaning}</h3>
+	            <div class="card-info">
+	                ${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}
+	            </div>
+	            <p>${readingText}</p>
+	        </div>
+	    `;
+	});
 
-        // --- 結果カードのリーディング ---
-        const resultSection = reading.split(/---結果カード---/)[1]?.trim() ||
-            "総合テーマの生成に失敗しました。";
+	// ★★★ ここが抜けていた！追加してください ★★★
+	const resultCard = selectedCards[12];
+	const resultMeaning = resultCard.isReversed ? resultCard.reversed : resultCard.upright;
 
-        html += `
-            <div class="house-reading" 
-                 style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
-                <h3>結果カード（今月の総合テーマ）</h3>
-                <div class="card-info">
-                    ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}
-                </div>
-                <p>${resultSection}</p>
-            </div>
-        `;
+	// --- 結果カードのリーディング ---
+	const resultSection = reading.split(/---結果カード---/)[1]?.trim() ||
+	    "総合テーマの生成に失敗しました。";
 
-        readingContent.innerHTML = html;
+	html += `
+	    <div class="house-reading" 
+	         style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
+	        <h3>結果カード（今月の総合テーマ）</h3>
+	        <div class="card-info">
+	            ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}
+	        </div>
+	        <p>${resultSection}</p>
+	    </div>
+	`;
 
-    } catch (error) {
-        console.error("Reading generation error:", error);
-        readingContent.innerHTML = "<p>リーディング生成中にエラーが発生しました。</p>";
-    }
-}
-
-// 占いを開始
-async function startReading() {
-    if (isShuffling) return;
-    
-    isShuffling = true;
-    const startButton = document.getElementById('startButton');
+	readingContent.innerHTML = html;
     startButton.disabled = true;
     
     document.getElementById('shuffleStatus').textContent = 'カードを準備中...';

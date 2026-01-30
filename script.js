@@ -401,32 +401,40 @@ async function generateReading() {
 
         // AI プロンプト
         const prompt = `
+あなたは経験豊富なタロット占い師です。
+
 【12ハウスのカード】
 ${cardDetails}
 
-【結果カード】
+【結果カード（今月の総合テーマ）】
 ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'}
 意味: ${resultMeaning}
 
+【重要な指示】
+1. 第1〜第12ハウスはそれぞれ250〜300文字でリーディングを書くこと。
+2. 結果カードは「今月の総合テーマ」として300文字前後でまとめること。
+3. 抽象表現を避け、具体的で実践的なアドバイスを含めること。
+4. 温かく前向きな語り口で書くこと。
+
+【出力フォーマット】
 ---第1ハウス---
----第2ハウス---
----第3ハウス---
----第4ハウス---
----第5ハウス---
----第6ハウス---
----第7ハウス---
----第8ハウス---
----第9ハウス---
----第10ハウス---
----第11ハウス---
+（リーディング）
+
+...
+
 ---第12ハウス---
+（リーディング）
+
 ---結果カード---
+（総合テーマのリーディング）
 `;
 
         // API 呼び出し
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 model: "claude-sonnet-4-20250514",
                 max_tokens: 6000,
@@ -440,30 +448,37 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         // --- パースして HTML に変換 ---
         let html = "";
 
+        // 12ハウスのリーディングを抽出
         const houseSections = reading.split(/---第\d+ハウス---/).filter(s => s.trim());
 
-        // 12ハウス
+        // 12ハウス分を出力
         selectedCards.slice(0, 12).forEach((card, index) => {
             const house = houses[index];
             const meaning = card.isReversed ? card.reversed : card.upright;
-            const readingText = houseSections[index]?.trim() || "生成失敗";
+            const readingText = houseSections[index]?.trim() || "リーディング生成に失敗しました。";
 
             html += `
                 <div class="house-reading">
                     <h3>${house.name} - ${house.meaning}</h3>
-                    <div class="card-info">${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}</div>
+                    <div class="card-info">
+                        ${card.name}${card.isReversed ? '（逆位置）' : '（正位置）'} - ${meaning}
+                    </div>
                     <p>${readingText}</p>
                 </div>
             `;
         });
 
-        // 結果カード
-        const resultSection = reading.split(/---結果カード---/)[1]?.trim() || "生成失敗";
+        // --- 結果カードのリーディング ---
+        const resultSection = reading.split(/---結果カード---/)[1]?.trim() ||
+            "総合テーマの生成に失敗しました。";
 
         html += `
-            <div class="house-reading" style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
+            <div class="house-reading" 
+                 style="border-left: 4px solid var(--gold); background: rgba(212,175,55,0.1);">
                 <h3>結果カード（今月の総合テーマ）</h3>
-                <div class="card-info">${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}</div>
+                <div class="card-info">
+                    ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）'} - ${resultMeaning}
+                </div>
                 <p>${resultSection}</p>
             </div>
         `;
@@ -475,6 +490,7 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         readingContent.innerHTML = "<p>リーディング生成中にエラーが発生しました。</p>";
     }
 }
+
 
 // ===============================
 // ★ startReading（完全修正版）
@@ -510,7 +526,3 @@ async function startReading() {
 
     isShuffling = false;
 }
-
-// 初期化
-initializeDeck();
-document.getElementById('startButton').addEventListener('click', startReading);

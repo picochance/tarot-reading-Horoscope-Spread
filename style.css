@@ -328,3 +328,23 @@ h1 {
         font-size: 0.7em;
     }
 }
+/* 結果カード（13枚目）専用デザイン */
+.result-card {
+    transform: scale(1.2);
+    z-index: 10;
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.8), 0 0 50px rgba(212, 175, 55, 0.5);
+    border-radius: 12px;
+}
+
+/* 結果カードのラベル */
+.result-label {
+    position: absolute;
+    top: 430px; /* 中央カードの下あたりに配置 */
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 1.3em;
+    color: var(--gold);
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+    letter-spacing: 2px;
+}

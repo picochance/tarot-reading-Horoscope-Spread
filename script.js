@@ -1,3 +1,12 @@
+let engine = null;
+
+async function loadLLM() {
+    engine = await webllm.createEngine({
+        model: "Llama-3.2-1B-Instruct-q4f32_1-MLC"
+    });
+}
+loadLLM();
+
 // タロットカードデータ（78枚）- 詳細な意味付き
 const tarotDeck = [
     // 大アルカナ（22枚）
@@ -429,6 +438,7 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
 （総合テーマのリーディング）
 `;
 
+        /*
         // API 呼び出し
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
@@ -441,9 +451,20 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
                 messages: [{ role: "user", content: prompt }]
             })
         });
-
-        const data = await response.json();
         const reading = data.content[0].text;
+        */
+        
+        // WebLLM で推論
+        const reply = await engine.chat.completions.create({
+            messages: [
+                { role: "user", content: prompt }
+            ],
+            max_tokens: 6000
+        });
+        
+        // Claude の data.content[0].text と同じ形式に合わせる
+        const reading = reply.choices[0].message.content;
+        const data = await response.json();
 
         // --- パースして HTML に変換 ---
         let html = "";

@@ -6,8 +6,11 @@
     <title>月運タロット占い - ホロスコープ・スプレッド</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<script src="https://cdn.jsdelivr.net/npm/@xenova/transformers"></script>
-<script src="script.js"></script>
+<script type="module">
+  import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
+  window.pipeline = pipeline;
+</script>
+<script type="module" src="script.js"></script>
 <body>
     <div class="container">
         <header>

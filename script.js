@@ -1,4 +1,4 @@
-import { pipeline } from "@xenova/transformers";
+import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
 
 let generator = null;
 
@@ -7,6 +7,7 @@ async function loadLLM() {
 }
 
 loadLLM();
+
 
 // タロットカードデータ（78枚）- 詳細な意味付き
 const tarotDeck = [

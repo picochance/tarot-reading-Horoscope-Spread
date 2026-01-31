@@ -6,11 +6,15 @@
     <title>月運タロット占い - ホロスコープ・スプレッド</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<!-- Transformers.js を読み込む（ESM） -->
 <script type="module">
   import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
+  // グローバルに渡す
   window.pipeline = pipeline;
 </script>
+<!-- あなたの script.js を module として読み込む -->
 <script type="module" src="script.js"></script>
+
 <body>
     <div class="container">
         <header>

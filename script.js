@@ -1,10 +1,11 @@
-let engine = null;
+import { pipeline } from "@xenova/transformers";
+
+let generator = null;
 
 async function loadLLM() {
-    engine = await webllm.createEngine({
-        model: "Llama-3.2-1B-Instruct-q4f32_1-MLC"
-    });
+  generator = await pipeline("text-generation", "Xenova/llama-3.2-1b-instruct");
 }
+
 loadLLM();
 
 // タロットカードデータ（78枚）- 詳細な意味付き
@@ -453,7 +454,7 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         });
         const reading = data.content[0].text;
         */
-        
+        /*
         // WebLLM で推論
         const reply = await engine.chat.completions.create({
             messages: [
@@ -461,9 +462,14 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
             ],
             max_tokens: 6000
         });
-        
         // Claude の data.content[0].text と同じ形式に合わせる
         const reading = reply.choices[0].message.content;
+        */
+        
+        // ★ Transformers.js で推論
+        const out = await generator(prompt, { max_new_tokens: 6000 });
+        const reading = out[0].generated_text;
+        
         const data = await response.json();
 
         // --- パースして HTML に変換 ---

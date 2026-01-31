@@ -3,7 +3,10 @@ import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers";
 let generator = null;
 
 async function loadLLM() {
-  generator = await pipeline("text-generation", "Xenova/llama-3.2-1b-instruct");
+  generator = await pipeline(
+    "text-generation",
+    "Xenova/tiny-llama-1.1b-chat"
+  );
 }
 
 loadLLM();
@@ -470,6 +473,7 @@ ${resultCard.name}${resultCard.isReversed ? '（逆位置）' : '（正位置）
         // ★ Transformers.js で推論
         const out = await generator(prompt, { max_new_tokens: 6000 });
         const reading = out[0].generated_text;
+
         
         const data = await response.json();
 
